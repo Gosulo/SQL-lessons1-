@@ -1,0 +1,55 @@
+--Создание базы данных.
+
+.open lessons_sql.db;
+
+--Создание таблицы
+
+CREATE TABLE phone (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  product_name CHAR NOT NULL,
+  manufacture CHAR NOT NULL,
+  count INT NOT NULL,
+  prise INT NOT NULL
+  );
+
+--Заполнение данными 
+
+INSERT INTO phone (product_name,manufacture,count,prise) VALUES
+('S21','Samsung',8,35000),
+('A32','Samsung',3,12500),
+('Iphone 13','Apple',5,55000),
+('P30pro','Huawei',3,55000),
+('P10pro','Realmi',1,9900);
+
+--Задание 1:Напишите SELECT-запрос, который выводит название товара, производителя и цену для товаров, количество которых превышает 2
+
+ SELECT product_name,manufacture,prise FROM phone where count > 2;
+
+product_name  manufacture  prise
+------------  -----------  -----
+S21           Samsung      35000
+A32           Samsung      12500
+Iphone 13     Apple        55000
+P30pro        Huawei       55000
+
+--Задание 2 Выведите SELECT-запросом весь ассортимент товаров марки “Samsung”
+
+SELECT * FROM phone 
+where manufacture = 'Samsung';
+
+id  product_name  manufacture  count  prise
+--  ------------  -----------  -----  -----
+1   S21           Samsung      8      35000
+2   A32           Samsung      3      12500
+
+--Задания со *
+--4.* С помощью SELECT-запроса с оператором LIKE / REGEXP найти:
+--4.1.* Товары, в которых есть упоминание "Iphone"
+
+
+4.* 
+SELECT * FROM phone WHERE manufacture or product_name LIKE 'Iphone%';
+
+id  product_name  manufacture  count  prise
+--  ------------  -----------  -----  -----
+3   Iphone 13     Apple        5      55000
