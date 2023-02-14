@@ -1,0 +1,143 @@
+Lessons 2 
+
+-- Создание таблиц фильмы жанры студии и связь фильма- жанр с заполнением начальными данными. 
+
+
+CREATE TABLE studio 
+(
+id_studio INTEGER PRIMARY KEY AUTOINCREMENT,
+name CHAR NOT NULL
+);
+
+CREATE TABLE film 
+(
+id_film INTEGER PRIMARY KEY AUTOINCREMENT,
+name CHAR NOT NULL,
+studio CHAR NOT NULL,
+year INTEGER NOT NULL,
+FOREIGN KEY (studio) REFERENCES studio(id_studio) ON DELETE RESTRICT
+);
+
+CREATE TABLE genre
+(
+id_genre INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL
+);
+
+CREATE TABLE genre_link
+(
+id_gl  INTEGER PRIMARY KEY AUTOINCREMENT,
+id_film CHAR NOT NULL,
+id_genre CHAR NOT NULL,
+FOREIGN KEY (id_film) REFERENCES film(id_film) ON UPDATE CASCADE,
+FOREIGN KEY (id_genre) REFERENCES genre(id_genre) ON UPDATE CASCADE
+);
+
+-- Заполнение данных в таблицы 
+
+INSERT INTO studio (name) VALUES 
+("Marvel"),
+("Wornar Brazers"),
+("Mad MAX Copmane");
+
+
+INSERT INTO genre (name) VALUES
+("Приключение"),
+("Фантастика"),
+("Боевик"),
+("Драма"),
+("Фентези");
+
+
+INSERT INTO film (name,studio,year) VALUES
+("Ironman",1,2008),
+("Ironman 2",1,2010),
+("Green mile",2,1999),
+("Harry potter Deathly Hallows",2,2010),
+("Mad Max",3,1979);
+
+INSERT INTO genre_link (id_film,id_genre) VALUES
+(1,1),
+(1,2),
+(2,1),
+(2,2),
+(3,4),
+(4,5),
+(5,3),
+(5,2);
+
+ -- Переименование таблиц и колонок с помощью оператора  RENAME 
+
+ ALTER TABLE film  -- переименование таблицы
+ RENAME TO films_boom;
+
+sqlite> .tables  -- Проверка 
+films_boom  genre       genre_link  phone       studio  
+
+ALTER TABLE films_boom    Переименование столбца  
+RENAME COLUMN year TO date;
+
+id_film  name                          studio  date
+-------  ----------------------------  ------  ----
+1        Ironman                       1       2008
+2        Ironman 2                     1       2010
+3        Green mile                    2       1999
+4        Harry potter Deathly Hallows  2       2010
+5        Mad Max                       3       1979
+
+
+-- Использование оператора псевдонима 
+
+SELECT name AS "Жанры"
+FROM genre;
+
+Жанры      
+-----------
+Приключение
+Фантастика 
+Боевик     
+Драма      
+Фентези   
+
+-- Использование кейсов 
+
+SELECT name,date, 
+CASE 
+WHEN date < 1985 
+THEN "Old"
+WHEN date > 1990 AND date < 2000
+THEN "Normal"
+ELSE "New"
+END AS "Новизна"
+FROM films_boom;
+
+name                          date  Новизна
+----------------------------  ----  -------
+Ironman                       2008  New    
+Ironman 2                     2010  New    
+Green mile                    1999  Normal 
+Harry potter Deathly Hallows  2010  New    
+Mad Max                       1979  Old    
+
+-- Использование оператора IF  (Делаю через IIF так как работаю в SQLlite3)
+
+SELECT name,date,
+IIF (date > 2000,"Новые фильмы","Старые фильмы") AS "Filter"
+FROM films_boom;
+
+name                          date  Filter       
+----------------------------  ----  -------------
+Ironman                       2008  Новые фильмы 
+Ironman 2                     2010  Новые фильмы 
+Green mile                    1999  Старые фильмы
+Harry potter Deathly Hallows  2010  Новые фильмы 
+Mad Max                       1979  Старые фильмы
+ 
+
+/* 
+Коментарии к выполнению:
+Из проделанной работы наблюдаются сложности:
+1) Крайне не удобно ручками заполнять большой обьем данных , однозначно нужно учиться парсисть строку и вносить данные автоматически 
+2) Без четко продумманых заранее связей трудно будет потом использовать ключи , как лайф хак . Сделать общую таблицу со всей информацией и привести ее к 3 форме. Так меньше шансов ошибиться и удобнее чем продумывать связь заранее. 
+3) Использование кейсов трудная крайне опасня вещь , нужно четко продумывать условия иначе может не сработать один из фильтров. 
+*/
