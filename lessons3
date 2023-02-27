@@ -1,0 +1,29 @@
+-- Выведите количество мужчин старше 35 лет [COUNT].
+SELECT COUNT(*) 
+FROM profiles 
+WHERE birthday > 1988
+strftime like '%Y'
+;
+
+-- Сколько заявок в друзья в каждом статусе? (таблица friend_requests) [GROUP BY]
+SELECT status , COUNT (status) AS "count" 
+FROM friend_requests
+GROUP BY status ;
+status      count
+----------  -----
+approved    19   
+declined    11   
+requested   16   
+unfriended  11  
+
+
+--Выведите номер пользователя, который отправил больше всех заявок в друзья (таблица friend_requests) [LIMIT].
+
+SELECT initiator_user_id 
+FROM friend_requests 
+ORDER BY initiator_user_id 
+LIMIT 1 ;
+
+initiator_user_id
+-----------------
+1             
